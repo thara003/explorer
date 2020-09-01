@@ -84,6 +84,6 @@
     "test:e2e": "start-server-and-test dev http://localhost:3100 cypress:run",
     "cypress:run": "cypress run",
     "test": "echo nothing interesting",
-    "start": "node index.js"
+    "start": "DEBUG=axios node index.js"
   }
 }

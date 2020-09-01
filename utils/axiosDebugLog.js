@@ -2,7 +2,10 @@
 
 module.exports = {
   request: function (debug, config) {
-    debug(`Request for ${config.url} with headers:`)
+    debug(`Request for ${config.url}`)
+    debug('with params:')
+    debug(config.params)
+    debug('with headers:')
     debug(config.headers)
   },
   response: function (debug, response) {

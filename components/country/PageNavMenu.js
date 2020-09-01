@@ -15,7 +15,7 @@ const ToggleIcon = styled(MdExpandLess)`
   cursor: pointer;
   background-color: ${props => props.theme.colors.gray3};
   border-radius: 50%;
-  transform: ${props => props.isopen ? 'rotate(0deg)': 'rotate(180deg)'};
+  transform: ${props => props.isopen === 'true' ? 'rotate(0deg)': 'rotate(180deg)'};
   transition: transform 0.1s linear;
 `
 
@@ -26,7 +26,7 @@ const PageNavMenu = () => {
     <React.Fragment>
       {/* Show a trigger to open and close the nav menu, but hide it on desktops */}
       <Hide large xlarge>
-        <ToggleIcon size={36} isopen={isOpen} onClick={() => setOpen(!isOpen)} />
+        <ToggleIcon size={36} isopen={isOpen.toString()} onClick={() => setOpen(!isOpen)} />
       </Hide>
       <Box width={[1, 'unset']}>
         {isOpen && <Flex flexDirection={['column', 'row']} justifyContent='center' py={3}>
