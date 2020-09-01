@@ -37,8 +37,8 @@ const HighlightSection = ({
 }
 
 HighlightSection.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string,
+  title: PropTypes.any,
+  description: PropTypes.any,
   highlights: PropTypes.arrayOf(PropTypes.shape({
     countryCode: PropTypes.string.isRequired,
     countryName: PropTypes.string.isRequired,

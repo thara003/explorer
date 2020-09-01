@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Box, Container } from 'ooni-components'
+import { Flex, Box, Container, Link } from 'ooni-components'
 import ExplorerLogo from 'ooni-components/components/svgs/logos/OONI-HorizontalMonochromeInverted.svg'
-import NLink from 'next/link'
 import { useIntl } from 'react-intl'
 import { version } from '../package.json'
 
@@ -42,9 +41,9 @@ const FooterLink = ({ label, href, horizontal = false}) => (
   // Use non-boolean value for props sent to non-DOM styled components
   // https://www.styled-components.com/docs/faqs#why-am-i-getting-html-attribute-warnings
   <FooterLinkItem mb={2} horizontal={horizontal.toString()}>
-    <NLink href={href} passHref>
+    <Link href={href}>
       <StyledFooterLabel>{label}</StyledFooterLabel>
-    </NLink>
+    </Link>
   </FooterLinkItem>
 )
 

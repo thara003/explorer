@@ -44,7 +44,7 @@ class CoverageChart extends React.Component {
   }
 
   async fetchCoverageStats () {
-    const client = axios.create({baseURL: process.env.MEASUREMENTS_URL}) // eslint-disable-line
+    const client = axios.create({baseURL: process.env.MEASUREMENTS_URL, headers: { 'x-test-this-header': 'letssee'}}) // eslint-disable-line
     const result = await client.get('/api/_/global_overview_by_month')
 
     this.setState({

@@ -9,6 +9,10 @@ import MatomoTracker from '@datapunt/matomo-tracker-js'
 
 import '../static/nprogress.css'
 import ErrorPage from './_error'
+import axiosDebugLog from 'axios-debug-log'
+import axiosDebugConfig from '../utils/axiosDebugLog'
+
+axiosDebugLog(axiosDebugConfig)
 
 // Intercept route changes on page navigation to show top edge progress bar
 Router.onRouteChangeStart = () => NProgress.start()

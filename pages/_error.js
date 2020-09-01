@@ -57,7 +57,7 @@ class ErrorPage extends React.Component {
               <Text>
                 <FormattedMessage id='Error.404.GoBack'>
                   {message =>
-                    <Link href='javascript:void(0)'>
+                    <Link href='#'>
                       <a onClick={() => Router.back()}>{message}</a>
                     </Link>}
                 </FormattedMessage>

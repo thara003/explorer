@@ -108,7 +108,7 @@ class NetworkPropertiesSection extends React.Component {
         {content}
         {(visibleNetworks < totalNetworks) &&
           <Flex justifyContent='center'>
-            <Link color='blue7' href='javascript:void(0)' onClick={() => this.showMoreNetworks()}>
+            <Link color='blue7' href='#' onClick={() => this.showMoreNetworks()}>
               <FormattedMessage id='Country.NetworkProperties.Button.ShowMore' />
             </Link>
           </Flex>

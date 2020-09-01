@@ -165,7 +165,7 @@ class URLChart extends React.Component {
       (item.total_count > max) ? item.total_count : max
     ), 0)
 
-    const domainToExplore = new URL(metadata.input).hostname
+    const domainToExplore = new URL(metadata.input || 'https://google.com').hostname
 
     return (
       <StyledChartRow flexWrap='wrap' justifyContent='space-between' bg='gray0' my={3}>

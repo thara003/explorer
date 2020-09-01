@@ -5,6 +5,8 @@ const next = require('next')
 const axios = require('axios')
 const favicon = require('serve-favicon')
 const path = require('path')
+const axiosDebugConfig = require('./utils/axiosDebugLog')
+require('axios-debug-log')(axiosDebugConfig)
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 process.env.PORT = process.env.PORT || 3100
