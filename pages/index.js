@@ -126,7 +126,14 @@ export default class LandingPage extends React.Component {
 
   static async getInitialProps () {
     const client = axios.create({baseURL: process.env.MEASUREMENTS_URL}) // eslint-disable-line
-    const result = await client.get('/api/_/global_overview')
+    const result = await client.get('/api/_/global_overview').catch(error => {
+      if (error.response) {
+        const { status, statusText, data } = error.response
+        throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
+      } else {
+        throw new Error(error)
+      }
+    })
     return {
       measurementCount: result.data.measurement_count,
       asnCount: result.data.network_count,

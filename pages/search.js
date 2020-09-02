@@ -51,7 +51,14 @@ const queryToParams = ({ query }) => {
 const getMeasurements = (query) => {
   let client = axios.create({baseURL: process.env.MEASUREMENTS_URL})  // eslint-disable-line
   const params = queryToParams({ query })
-  return client.get('/api/v1/measurements', {params})
+  return client.get('/api/v1/measurements', {params}).catch(error => {
+    if (error.response) {
+      const { status, statusText, data } = error.response
+      throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
+    } else {
+      throw new Error(error)
+    }
+  })
 }
 
 // Handle circular structures when stringifying error responses
@@ -148,7 +155,12 @@ class Search extends React.Component {
       client.get('/api/_/test_names'),
       client.get('/api/_/countries')
     ]).catch(error => {
-      throw new Error(error)
+      if (error.response) {
+        const { status, statusText, data } = error.response
+        throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
+      } else {
+        throw new Error(error)
+      }
     })
 
     let testNames = testNamesR.data.test_names
@@ -248,10 +260,16 @@ class Search extends React.Component {
           show: this.state.show + 50
         })
       })
-      .catch((err) => {
+      .catch(error => {
         this.setState({
-          error: err
+          error: error
         })
+        if (error.response) {
+          const { status, statusText, data } = error.response
+          throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
+        } else {
+          throw new Error(error)
+        }
       })
   }
 

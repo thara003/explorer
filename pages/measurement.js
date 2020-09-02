@@ -37,6 +37,13 @@ export default class Measurement extends React.Component {
     }
     let msmtResult = await client.get('/api/v1/measurements', {
       params
+    }).catch(error => {
+      if (error.response) {
+        const { status, statusText, data } = error.response
+        throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
+      } else {
+        throw new Error(error)
+      }
     })
     if (msmtResult.data.results.length > 0) {
       const results = msmtResult.data.results

@@ -64,7 +64,12 @@ export default class Country extends React.Component {
       client.get('/api/_/country_overview', { params: {'probe_cc': countryCode}}),
       client.get('https://ooni.org/pageindex.json')
     ]).catch(error => {
-      throw new Error(error)
+      if (error.response) {
+        const { status, statusText, data } = error.response
+        throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
+      } else {
+        throw new Error(error)
+      }
     })
 
     const testCoverage = results[0].data.test_coverage
@@ -96,6 +101,13 @@ export default class Country extends React.Component {
       params: {
         'probe_cc': this.props.countryCode,
         'test_groups': testGroupList
+      }
+    }).catch(error => {
+      if (error.response) {
+        const { status, statusText, data } = error.response
+        throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
+      } else {
+        throw new Error(error)
       }
     })
     // TODO: Use React.createContext to pass along data and methods
