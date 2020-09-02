@@ -124,7 +124,7 @@ class URLChart extends React.Component {
         probe_asn: network,
         input: metadata.input
       }
-    })
+    }).catch(axios.defaults.errorHandler)
     this.setState({
       data: result.data.results,
       fetching: false

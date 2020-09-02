@@ -34,7 +34,7 @@ class WebsitesSection extends React.Component {
       params: {
         probe_cc: countryCode
       }
-    })
+    }).catch(axios.defaults.errorHandler)
     if (result.data.results.length > 0) {
       this.setState({
         networks: result.data.results,

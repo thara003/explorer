@@ -52,7 +52,7 @@ class TestsByCategoryInNetwork extends React.Component {
         limit: resultsPerPage,
         offset: (currentPage > 0 ? (currentPage - 1) : 0) * resultsPerPage
       }
-    })
+    }).catch(axios.defaults.errorHandler)
     this.setState({
       testedUrlsCount: result.data.metadata.total_count,
       testedUrls: result.data.results,

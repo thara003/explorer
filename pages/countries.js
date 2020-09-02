@@ -166,14 +166,7 @@ class Countries extends React.Component {
 
   static async getInitialProps () {
     const client = axios.create({baseURL: process.env.MEASUREMENTS_URL}) // eslint-disable-line
-    const result = await client.get('/api/_/countries').catch(error => {
-      if (error.response) {
-        const { status, statusText, data } = error.response
-        throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
-      } else {
-        throw new Error(error)
-      }
-    })
+    const result = await client.get('/api/_/countries').catch(axios.defaults.errorHandler)
 
     // Sort countries by name (instead of by country codes)
     result.data.countries.sort((a,b) => a.name < b.name ? -1 : 1)

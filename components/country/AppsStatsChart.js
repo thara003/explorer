@@ -35,7 +35,7 @@ class AppsStatChart extends React.Component {
         probe_asn: asn,
         test_name: app
       }
-    })
+    }).catch(axios.defaults.errorHandler)
 
     this.setState({
       data: result.data.results,

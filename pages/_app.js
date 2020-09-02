@@ -10,16 +10,16 @@ import * as Sentry from '@sentry/node'
 
 import '../static/nprogress.css'
 import ErrorPage from './_error'
+import axios from 'axios'
 import axiosDebugLog from 'axios-debug-log'
-import axiosDebugConfig from '../utils/axiosDebugLog'
-
+import { axiosDebugConfig, axiosErrorHandler } from '../utils/axios'
 axiosDebugLog(axiosDebugConfig)
+axios.defaults.errorHandler = axiosErrorHandler
 
 // Intercept route changes on page navigation to show top edge progress bar
 Router.onRouteChangeStart = () => NProgress.start()
 Router.onRouteChangeComplete = () => NProgress.done()
 Router.onRouteChangeError = () => NProgress.done()
-
 
 if (process.env.SENTRY_DSN) {
   Sentry.init({

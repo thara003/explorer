@@ -37,21 +37,15 @@ export default class Measurement extends React.Component {
     }
     let msmtResult = await client.get('/api/v1/measurements', {
       params
-    }).catch(error => {
-      if (error.response) {
-        const { status, statusText, data } = error.response
-        throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
-      } else {
-        throw new Error(error)
-      }
-    })
+    }).catch(axios.defaults.errorHandler)
+
     if (msmtResult.data.results.length > 0) {
       const results = msmtResult.data.results
       const measurementURL = results[0].measurement_url
       if (results.length > 1) {
         initialProps['warning'] = 'dupes'
       }
-      let msmtContent = await client.get(measurementURL)
+      let msmtContent = await client.get(measurementURL).catch(axios.defaults.errorHandler)
       initialProps['measurement'] = msmtContent.data
       initialProps['measurementURL'] = measurementURL
       initialProps['isAnomaly'] = results[0].anomaly

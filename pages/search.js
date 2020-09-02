@@ -51,14 +51,7 @@ const queryToParams = ({ query }) => {
 const getMeasurements = (query) => {
   let client = axios.create({baseURL: process.env.MEASUREMENTS_URL})  // eslint-disable-line
   const params = queryToParams({ query })
-  return client.get('/api/v1/measurements', {params}).catch(error => {
-    if (error.response) {
-      const { status, statusText, data } = error.response
-      throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
-    } else {
-      throw new Error(error)
-    }
-  })
+  return client.get('/api/v1/measurements', {params}).catch(axios.defaults.errorHandler)
 }
 
 // Handle circular structures when stringifying error responses
@@ -154,14 +147,7 @@ class Search extends React.Component {
     [testNamesR, countriesR] = await Promise.all([
       client.get('/api/_/test_names'),
       client.get('/api/_/countries')
-    ]).catch(error => {
-      if (error.response) {
-        const { status, statusText, data } = error.response
-        throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
-      } else {
-        throw new Error(error)
-      }
-    })
+    ]).catch(axios.defaults.errorHandler)
 
     let testNames = testNamesR.data.test_names
     testNames.sort(sortByKey('name'))
@@ -173,24 +159,7 @@ class Search extends React.Component {
     countries.sort(sortByKey('name'))
 
 
-    try {
-      msmtR = await getMeasurements(query)
-    } catch (err) {
-      let error
-      if (err.response) {
-        error = err.response.data
-      } else {
-        error = err.message
-      }
-      return {
-        error,
-        results: [],
-        nextURL: null,
-        testNamesKeyed,
-        testNames,
-        countries
-      }
-    }
+    msmtR = await getMeasurements(query)
 
     const measurements = msmtR.data
 
@@ -260,17 +229,7 @@ class Search extends React.Component {
           show: this.state.show + 50
         })
       })
-      .catch(error => {
-        this.setState({
-          error: error
-        })
-        if (error.response) {
-          const { status, statusText, data } = error.response
-          throw new Error(`${status} - ${statusText} - ${data.error || 'No response.data'}`)
-        } else {
-          throw new Error(error)
-        }
-      })
+      .catch(axios.defaults.errorHandler)
   }
 
   onApplyFilter (state) {
@@ -299,6 +258,7 @@ class Search extends React.Component {
               error: err,
               loading: false
             })
+            axios.defaults.errorHandler(err)
           })
       })
     })

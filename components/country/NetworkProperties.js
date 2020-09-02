@@ -60,7 +60,7 @@ class NetworkPropertiesSection extends React.Component {
         limit: NETWORK_STATS_PER_PAGE,
         offset: (currentPage > 0 ? currentPage : 0) * NETWORK_STATS_PER_PAGE
       }
-    })
+    }).catch(axios.defaults.errorHandler)
 
     this.setState((state) => ({
       data: [...state.data, ...result.data.results],

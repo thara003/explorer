@@ -37,7 +37,7 @@ class AppsStatsCircumvention extends React.Component {
       params: {
         probe_cc: countryCode
       }
-    })
+    }).catch(axios.defaults.errorHandler)
 
     this.setState({
       data: result.data,
