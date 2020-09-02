@@ -147,7 +147,9 @@ class Search extends React.Component {
     [testNamesR, countriesR] = await Promise.all([
       client.get('/api/_/test_names'),
       client.get('/api/_/countries')
-    ])
+    ]).catch(error => {
+      throw new Error(error)
+    })
 
     let testNames = testNamesR.data.test_names
     testNames.sort(sortByKey('name'))

@@ -1,109 +1,58 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Head from 'next/head'
-import Link from 'next/link'
-import Router from 'next/router'
-import {
-  Container,
-  Flex,
-  Box,
-  Text,
-  Heading
-} from 'ooni-components'
-import styled from 'styled-components'
-import { FormattedMessage } from 'react-intl'
+import NextErrorComponent from 'next/error'
+import * as Sentry from '@sentry/node'
 
-import NavBar from '../components/NavBar'
-import Layout from '../components/Layout'
-import OONI404 from '../static/images/OONI_404.svg'
-
-const FullHeightFlex = styled(Flex)`
-  min-height: 50vh;
-`
-
-class ErrorPage extends React.Component {
-  static getInitialProps ({ res, xhr }) {
-    const errorCode = res ? res.statusCode : ( xhr ? xhr.status : null)
-    return { errorCode }
+const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
+  if (!hasGetInitialPropsRun && err) {
+    // getInitialProps is not called in case of
+    // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
+    // err via _app.js so it can be captured
+    Sentry.captureException(err)
   }
-
-  render404 () {
-    return (
-      <Layout>
-        <Head>
-          <title> Page Not Found </title>
-        </Head>
-        <NavBar />
-        <Container>
-          <FullHeightFlex alignItems='center' justifyContent='center'>
-            <Box>
-              <Heading h={4} color='blue5'>
-                <FormattedMessage id='Error.404.Heading'/>
-              </Heading>
-              <Text mb={3}>
-                <FormattedMessage
-                  id='Error.404.Message'
-                  defaultMessage='We could not find the content you were looking for. Maybe try {measurmentLink} or look at {homePageLink}.'
-                  values={{
-                    measurmentLink: <FormattedMessage id='Error.404.MeasurmentLinkText'>
-                      {message => <Link href='/countries'><a>{message}</a></Link>}
-                    </FormattedMessage>,
-                    homePageLink: <FormattedMessage id='Error.404.HomepageLinkText'>
-                      {message => <Link href='/'><a>{message}</a></Link>}
-                    </FormattedMessage>
-                  }}
-                />
-              </Text>
-              <Text>
-                <FormattedMessage id='Error.404.GoBack'>
-                  {message =>
-                    <Link href='#'>
-                      <a onClick={() => Router.back()}>{message}</a>
-                    </Link>}
-                </FormattedMessage>
-              </Text>
-            </Box>
-            <Box p={6}>
-              <OONI404 height='500px'/>
-            </Box>
-          </FullHeightFlex>
-        </Container>
-      </Layout>
-    )
-  }
-
-  render500 () {
-    return (
-      <Layout>
-        <Head>
-          <title> Unknown Error </title>
-        </Head>
-        <NavBar />
-        <Container>
-          <FullHeightFlex alignItems='center' justifyContent='center' flexDirection='column'>
-            <Heading h={4}>
-              There was an unexpected error from our end.
-            </Heading>
-            <Text my={4}>
-              Maybe try <Link href='/countries'><a>exploring some measurements</a></Link> or go to our <Link href='/'><a>homepage</a></Link>.
-            </Text>
-          </FullHeightFlex>
-        </Container>
-      </Layout>
-    )
-  }
-
-  render () {
-    const { errorCode } = this.props
-    if (errorCode === 404) {
-      return this.render404()
-    }
-    return this.render500()
-  }
+  return <NextErrorComponent statusCode={statusCode} title='Yo Yo Error' />
 }
 
-ErrorPage.propTypes = {
-  errorCode: PropTypes.number.isRequired
+MyError.getInitialProps = async ({ res, err, asPath }) => {
+  const errorInitialProps = await NextErrorComponent.getInitialProps({
+    res,
+    err,
+  })
+
+  // Workaround for https://github.com/vercel/next.js/issues/8592, mark when
+  // getInitialProps has run
+  errorInitialProps.hasGetInitialPropsRun = true
+
+  // Running on the server, the response object (`res`) is available.
+  //
+  // Next.js will pass an err on the server if a page's data fetching methods
+  // threw or returned a Promise that rejected
+  //
+  // Running on the client (browser), Next.js will provide an err if:
+  //
+  //  - a page's `getInitialProps` threw or returned a Promise that rejected
+  //  - an exception was thrown somewhere in the React lifecycle (render,
+  //    componentDidMount, etc) that was caught by Next.js's React Error
+  //    Boundary. Read more about what types of exceptions are caught by Error
+  //    Boundaries: https://reactjs.org/docs/error-boundaries.html
+
+  if (res.statusCode === 404) {
+    // Opinionated: do not record an exception in Sentry for 404
+    return { statusCode: 404 }
+  }
+  if (err) {
+    Sentry.captureException(err)
+    await Sentry.flush(2000)
+    return errorInitialProps
+  }
+
+  // If this point is reached, getInitialProps was called without any
+  // information about what the error might be. This is unexpected and may
+  // indicate a bug introduced in Next.js, so record it in Sentry
+  Sentry.captureException(
+    new Error(`_error.js getInitialProps missing data at path: ${asPath}`)
+  )
+  await Sentry.flush(2000)
+
+  return errorInitialProps
 }
 
-export default ErrorPage
+export default MyError

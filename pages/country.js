@@ -63,7 +63,9 @@ export default class Country extends React.Component {
       client.get('/api/_/test_coverage', {params: {'probe_cc': countryCode}}),
       client.get('/api/_/country_overview', { params: {'probe_cc': countryCode}}),
       client.get('https://ooni.org/pageindex.json')
-    ])
+    ]).catch(error => {
+      throw new Error(error)
+    })
 
     const testCoverage = results[0].data.test_coverage
     const networkCoverage = results[0].data.network_coverage

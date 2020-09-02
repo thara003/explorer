@@ -31,6 +31,6 @@ BoxWithTitle.propTypes = {
   title: PropTypes.oneOf([
     PropTypes.string,
     PropTypes.node
-  ]).isRequired,
+  ]),
   children: PropTypes.node
 }
