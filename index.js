@@ -2,10 +2,10 @@
 /* eslint no-console: off */
 const express = require('express')
 const next = require('next')
-const axios = require('axios')
 const favicon = require('serve-favicon')
 const path = require('path')
-const axiosDebugConfig = require('./utils/axiosDebugLog')
+const axiosDebugConfig = require('./utils/axiosDebugConfig')
+
 require('axios-debug-log')(axiosDebugConfig)
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'

@@ -12,7 +12,8 @@ import '../static/nprogress.css'
 import ErrorPage from './_error'
 import axios from 'axios'
 import axiosDebugLog from 'axios-debug-log'
-import { axiosDebugConfig, axiosErrorHandler } from '../utils/axios'
+import axiosDebugConfig from '../utils/axiosDebugConfig'
+import { axiosErrorHandler } from '../utils/axiosErrorHander'
 axiosDebugLog(axiosDebugConfig)
 axios.defaults.errorHandler = axiosErrorHandler
 
