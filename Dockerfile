@@ -16,7 +16,7 @@ RUN set -ex \
 USER node
 WORKDIR /usr/src/app
 
-# .cache removal leads to two times smaller image and 
+# .cache removal leads to two times smaller image and
 RUN set -ex \
     && yarn install --frozen-lockfile \
     && yarn run build \
@@ -26,4 +26,4 @@ RUN set -ex \
 EXPOSE 3100
 
 USER daemon
-CMD [ "yarn", "run", "start" ]
+CMD [ "yarn", "dev" ]
