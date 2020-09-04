@@ -59,11 +59,12 @@ const DetailsHeader = ({testName, runtime, notice, url}) => {
           {notice}
         </Box>
         <Box>
-          <Text fontSize={20}>
+          {runtime && <Text fontSize={20}>
             <FormattedMessage id='Measurement.DetailsHeader.Runtime' />: <Text is='span' fontWeight='bold'>{prettyMs(runtime * 1000)}</Text>
-          </Text>
-        </Box>
-      </Flex>
+          </Text>}
+        }
+      </Box>
+    </Flex>
       <Flex pb={4} pt={2} alignItems={['flex-start', 'flex-end']}>
         <SocialButtons url={url}/>
       </Flex>
